@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kargo Seçimi - Adım 2</title>
+    <link rel="stylesheet" href="odeme.style.css" />
+  </head>
+  <body>
+    <div class="checkout-container">
+      <div class="checkout-main">
+        <!-- Stepper Indicator -->
+        <div class="checkout-stepper">
+          <div
+            class="step completed"
+            onclick="window.location.href = 'adres.html'"
+          >
+            <span class="step-number">✓</span>
+            <span class="step-title">Adres Bilgileri</span>
+          </div>
+          <div class="step-line"></div>
+          <div class="step active">
+            <span class="step-number">2</span>
+            <span class="step-title">Kargo Seçimi</span>
+          </div>
+          <div class="step-line"></div>
+          <div class="step disabled">
+            <span class="step-number">3</span>
+            <span class="step-title">Ödeme Seçenekleri</span>
+          </div>
+        </div>
+
+        <h2>2. Kargo Firması Seçimi</h2>
+        <form id="shipping-form">
+          <div class="shipping-options">
+            <label class="shipping-card">
+              <input
+                type="radio"
+                name="shipping"
+                value="30"
+                data-name="Yurtiçi Kargo"
+                checked
+              />
+              <div class="shipping-info">
+                <strong>Yurtiçi Kargo</strong>
+                <small>1-3 İş Günü İçinde Teslimat</small>
+              </div>
+              <span class="shipping-price">30.00 TL</span>
+            </label>
+
+            <label class="shipping-card">
+              <input
+                type="radio"
+                name="shipping"
+                value="25"
+                data-name="Aras Kargo"
+              />
+              <div class="shipping-info">
+                <strong>Aras Kargo</strong>
+                <small>2-4 İş Günü İçinde Teslimat</small>
+              </div>
+              <span class="shipping-price">25.00 TL</span>
+            </label>
+
+            <label class="shipping-card">
+              <input
+                type="radio"
+                name="shipping"
+                value="50"
+                data-name="Hızlı Kargo (Aynı Gün)"
+              />
+              <div class="shipping-info">
+                <strong>Hızlı Kargo (Aynı Gün)</strong>
+                <small>Saat 12:00 öncesi siparişlerde</small>
+              </div>
+              <span class="shipping-price">50.00 TL</span>
+            </label>
+          </div>
+
+          <div class="step-buttons">
+            <button
+              type="button"
+              class="prev-step-btn"
+              onclick="window.location.href = 'adres.html'"
+            >
+              Geri
+            </button>
+            <button type="submit" class="next-step-btn">
+              Ödeme Sayfasına Geç
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Sipariş Özeti -->
+      <div class="order-summary-section">
+        <h3>Sipariş Özeti</h3>
+        <div id="checkout-cart-items" class="summary-items"></div>
+        <div class="summary-totals">
+          <div class="summary-row">
+            <span>Ara Toplam:</span>
+            <span id="subtotal-price">0.00 TL</span>
+          </div>
+          <div class="summary-row">
+            <span>Kargo Ücreti:</span>
+            <span id="shipping-price">30.00 TL</span>
+          </div>
+          <hr />
+          <div class="summary-row total-row">
+            <span>Toplam Tutar:</span>
+            <span id="final-total-price">0.00 TL</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        let shippingCost =
+          parseFloat(localStorage.getItem("shippingCost")) || 30;
+        loadCartSummary(shippingCost);
+
+        const radios = document.querySelectorAll('input[name="shipping"]');
+        radios.forEach((radio) => {
+          if (parseFloat(radio.value) === shippingCost) radio.checked = true;
+          radio.addEventListener("change", (e) => {
+            shippingCost = parseFloat(e.target.value);
+            loadCartSummary(shippingCost);
+          });
+        });
+
+        document
+          .getElementById("shipping-form")
+          .addEventListener("submit", (e) => {
+            e.preventDefault();
+            localStorage.setItem("shippingCost", shippingCost);
+            window.location.href = "odeme.html"; // Ödeme sayfasına git
+          });
+      });
+
+      function loadCartSummary(shippingCost) {
+        const cart = JSON.parse(localStorage.getItem("userCart")) || [];
+        const container = document.getElementById("checkout-cart-items");
+        let subtotal = 0;
+        container.innerHTML = "";
+        cart.forEach((item) => {
+          const total = item.price * item.quantity;
+          subtotal += total;
+          container.innerHTML += `<div class="summary-item"><span>${item.name} (x${item.quantity})</span><strong>${total.toLocaleString("tr-TR")} TL</strong></div>`;
+        });
+        document.getElementById("subtotal-price").textContent =
+          `${subtotal.toLocaleString("tr-TR")} TL`;
+        document.getElementById("shipping-price").textContent =
+          `${shippingCost.toLocaleString("tr-TR")} TL`;
+        document.getElementById("final-total-price").textContent =
+          `${(subtotal + shippingCost).toLocaleString("tr-TR")} TL`;
+      }
+    </script>
+  </body>
+</html>

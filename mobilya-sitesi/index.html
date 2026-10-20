@@ -1,0 +1,747 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="extra.css" />
+    <title>Özen Koltuk</title>
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="nav-brand">
+        <a href="#home" class="brand-badge">Özen Koltuk</a>
+      </div>
+
+      <button
+        class="nav-menu-btn"
+        id="menu-btn"
+        type="button"
+        aria-label="Menüyü aç/kapat"
+      >
+        <i class="ri-menu-line"></i>
+      </button>
+
+      <nav class="nav-links" id="nav-links">
+        <a href="#home" class="nav-item">Ana Sayfa</a>
+        <a href="#about" class="nav-item">Hakkımızda</a>
+        <a href="#product" class="nav-item">Ürünler</a>
+        <a href="#contact" class="nav-item">İletişim</a>
+      </nav>
+
+      <div class="nav-actions">
+        <div class="nav-search" id="nav-search">
+          <input
+            type="search"
+            id="search-input"
+            placeholder="Ürün ara"
+            aria-label="Ürün ara"
+          />
+          <button
+            class="search-btn"
+            id="search-btn"
+            type="button"
+            aria-label="Arama"
+          >
+            <i class="ri-search-2-line" aria-hidden="true"></i>
+          </button>
+        </div>
+
+        <div class="cart-icon-container">
+          <button
+            class="cart-btn"
+            id="cart-btn"
+            type="button"
+            aria-expanded="false"
+          >
+            <i class="ri-shopping-bag-line" aria-hidden="true"></i>
+            <span>Sepet</span>
+            <span class="cart-count" id="cart-count">0</span>
+          </button>
+
+          <div class="cart-dropdown" id="cart-dropdown">
+            <h3>Sepetim</h3>
+            <ul id="cart-items" class="cart-items"></ul>
+            <div class="cart-total">
+              <span>Toplam:</span>
+              <span id="cart-total-price">₺0,00</span>
+            </div>
+            <button class="checkout-btn" id="checkout-btn" type="button">
+              Siparişi Tamamla
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="section__container header__container" id="home">
+      <div class="header__image">
+        <img src="assets/header.jpg" alt="Modern bir oturma odası" />
+      </div>
+      <div class="header__content">
+        <div>
+          <h1>Modern İç Mekânlar Tasarlamanıza Yardımcı Oluyoruz</h1>
+          <p>
+            Profesyonel iç mimarların tasarladığı zarif ve lüks yaşam alanları
+            oluşturmanız için size yardımcı oluyoruz.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section__container deals__container">
+      <div class="deals__card">
+        <span><i class="ri-tools-line"></i></span>
+        <h4>Kaliteli İşçilik</h4>
+        <p>Her detayda özen, dayanıklılık ve kusursuz işçilik.</p>
+      </div>
+
+      <div class="deals__card">
+        <span><i class="ri-ruler-line"></i></span>
+        <h4>Özel Ölçü</h4>
+        <p>İhtiyacınıza ve yaşam alanınıza uygun ölçülerde üretim.</p>
+      </div>
+
+      <div class="deals__card">
+        <span><i class="ri-building-2-line"></i></span>
+        <h4>Mimari Çalışmalar</h4>
+        <p>Estetik ve işlevselliği birleştiren özgün tasarımlar.</p>
+      </div>
+    </section>
+
+    <section class="section__container about__container" id="about">
+      <div class="about__header">
+        <div>
+          <h2 class="section__header">Hakkımızda</h2>
+          <p class="section__description">
+            20 yılı aşkın üretim tecrübemizle kaliteyi, konforu ve şıklığı bir
+            araya getiriyoruz. Mobilya ve koltuk üretiminde edindiğimiz yılların
+            deneyimini, özenle seçilmiş kaliteli malzemeler ve titiz işçilikle
+            buluşturuyoruz. Her ürünümüzde estetik tasarımı, kullanım konforunu
+            ve uzun ömürlü sağlamlığı ön planda tutuyoruz. Üretimin her
+            aşamasında kalite standartlarımızdan ödün vermeden, müşterilerimizin
+            beklenti ve ihtiyaçlarına uygun çözümler sunuyoruz. Bizim için
+            başarı yalnızca şık ürünler üretmek değil, aynı zamanda
+            müşterilerimizin güvenini kazanmak ve satış sonrasında da
+            memnuniyetlerini sürdürmektir. Kaliteye verdiğimiz önem,
+            işçiliğimize duyduğumuz güven ve müşteri memnuniyetine olan
+            bağlılığımızla ürettiğimiz her ürünün arkasında duruyoruz. Satın
+            aldığınız ürünlerde sağlamlık ve dayanıklılığı önemsiyor,
+            ürünlerimiz için sunduğumuz garanti kapsamında güvenilir bir
+            alışveriş deneyimi sağlıyoruz. Biz, yalnızca koltuk üretmiyor; yaşam
+            alanlarınıza değer katan, uzun yıllar keyifle kullanabileceğiniz
+            ürünler sunuyoruz.
+          </p>
+        </div>
+        <button class="about__btn" type="button">Daha Fazla Bilgi</button>
+      </div>
+      <div class="about__content">
+        <div class="about__image">
+          <img
+            src="assets/about.png"
+            alt="Özen Koltuk atölyesinden bir görünüm"
+          />
+        </div>
+        <div class="about__grid">
+          <div class="about__card">
+            <span class="about__icon"><i class="ri-user-heart-line"></i></span>
+            <div class="about__text">
+              <h4>Biz Kimiz?</h4>
+              <p>
+                Her ihtiyaca ve zevke uygun, kaliteli ve şık mobilyaları
+                sizlerle buluşturuyoruz.
+              </p>
+            </div>
+          </div>
+          <div class="about__card">
+            <span class="about__icon"><i class="ri-sofa-line"></i></span>
+            <div class="about__text">
+              <h4>Ne Yapıyoruz?</h4>
+              <p>
+                Yaşam alanlarınızı güzelleştiren, işlevsel ve estetik mobilyalar
+                sunuyoruz.
+              </p>
+            </div>
+          </div>
+          <div class="about__card">
+            <span class="about__icon"
+              ><i class="ri-customer-service-2-line"></i
+            ></span>
+            <div class="about__text">
+              <h4>Size Nasıl Yardımcı Oluyoruz?</h4>
+              <p>
+                İhtiyaçlarınıza uygun ürün seçenekleri ve alışveriş desteği
+                sağlıyoruz.
+              </p>
+            </div>
+          </div>
+          <div class="about__card">
+            <span class="about__icon"><i class="ri-home-heart-line"></i></span>
+            <div class="about__text">
+              <h4>Hayalinizdeki Evi Oluşturun</h4>
+              <p>
+                Özenle seçilmiş mobilyalarımızla yaşam alanlarınızı dönüştürün.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section__container product__container" id="product">
+      <h2 class="section__header">Ürünlerimiz</h2>
+      <p class="section__description">
+        Konforlu ve şık tasarımlarımızı inceleyin.
+      </p>
+      <div
+        class="category-bar"
+        id="category-bar"
+        role="group"
+        aria-label="Ürün kategorileri"
+      >
+        <button type="button" class="category-chip active" data-category="all">
+          Tümü
+        </button>
+        <button type="button" class="category-chip" data-category="Sandalye">
+          Sandalye
+        </button>
+        <button type="button" class="category-chip" data-category="Masa">
+          Masa
+        </button>
+        <button type="button" class="category-chip" data-category="Koltuk">
+          Koltuk
+        </button>
+        <button type="button" class="category-chip" data-category="Aydınlatma">
+          Aydınlatma
+        </button>
+        <button type="button" class="category-chip" data-category="Dolap">
+          Dolap
+        </button>
+        <button type="button" class="category-chip" data-category="Diğer">
+          Diğer
+        </button>
+      </div>
+      <p class="no-results" id="no-results" hidden>
+        Aramanızla eşleşen ürün bulunamadı.
+      </p>
+      <div class="product__grid">
+        <div class="product__card" data-category="Sandalye">
+          <img src="assets/product-1.png" alt="İstiflenebilir Sandalye" />
+          <h4>İstiflenebilir Sandalye</h4>
+          <p>₺870,00</p>
+          <button
+            class="add-to-cart-btn"
+            type="button"
+            data-id="istiflenebilir-sandalye"
+            data-name="İstiflenebilir Sandalye"
+            data-price="870"
+          >
+            Sepete Ekle
+          </button>
+        </div>
+        <div class="product__card" data-category="Aydınlatma">
+          <img src="assets/product-2.png" alt="Masa Lambası" />
+          <h4>Masa Lambası</h4>
+          <p>₺350,00</p>
+          <button
+            class="add-to-cart-btn"
+            type="button"
+            data-id="masa-lambasi"
+            data-name="Masa Lambası"
+            data-price="350"
+          >
+            Sepete Ekle
+          </button>
+        </div>
+        <div class="product__card" data-category="Sandalye">
+          <img src="assets/product-3.png" alt="Yemek Sandalyesi" />
+          <h4>Yemek Sandalyesi</h4>
+          <p>₺550,00</p>
+          <button
+            class="add-to-cart-btn"
+            type="button"
+            data-id="yemek-sandalyesi"
+            data-name="Yemek Sandalyesi"
+            data-price="550"
+          >
+            Sepete Ekle
+          </button>
+        </div>
+        <div class="product__card" data-category="Aydınlatma">
+          <img src="assets/product-4.png" alt="Modern Tasarım Lambası" />
+          <h4>Modern Tasarım Lambası</h4>
+          <p>₺350,00</p>
+          <button
+            class="add-to-cart-btn"
+            type="button"
+            data-id="modern-tasarim-lambasi"
+            data-name="Modern Tasarım Lambası"
+            data-price="350"
+          >
+            Sepete Ekle
+          </button>
+        </div>
+        <div class="product__card" data-category="Sandalye">
+          <img src="assets/product-5.png" alt="Şık Tasarım Sandalye" />
+          <h4>Şık Tasarım Sandalye</h4>
+          <p>₺450,00</p>
+          <button
+            class="add-to-cart-btn"
+            type="button"
+            data-id="sik-tasarim-sandalye"
+            data-name="Şık Tasarım Sandalye"
+            data-price="450"
+          >
+            Sepete Ekle
+          </button>
+        </div>
+        <div class="product__card" data-category="Sandalye">
+          <img src="assets/product-6.png" alt="Vintage Sandalye" />
+          <h4>Vintage Sandalye</h4>
+          <p>₺650,00</p>
+          <button
+            class="add-to-cart-btn"
+            type="button"
+            data-id="vintage-sandalye"
+            data-name="Vintage Sandalye"
+            data-price="650"
+          >
+            Sepete Ekle
+          </button>
+        </div>
+        <div class="product__card" data-category="Koltuk">
+          <img src="assets/product-5.png" alt="Siyah Deri Koltuk" />
+          <h4>Siyah Deri Koltuk</h4>
+          <p>₺25.000,00</p>
+          <button
+            class="add-to-cart-btn"
+            type="button"
+            data-id="siyah-deri-koltuk"
+            data-name="Siyah Deri Koltuk"
+            data-price="25000"
+          >
+            Sepete Ekle
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="testimonials" id="reviews">
+      <div class="testimonials-header">
+        <h2>Mutlu Müşterilerimiz<br />Ne Diyor?</h2>
+        <p>
+          Kaliteye, üstün hizmet anlayışına ve müşteri memnuniyetine verdiğimiz
+          önemi keşfedin.
+        </p>
+      </div>
+
+      <div class="testimonial-list" id="testimonial-list">
+        <article class="testimonial-item">
+          <div class="testimonial-content">
+            <div class="testimonial-top">
+              <div>
+                <h3>David Miller</h3>
+                <span>Gayrimenkul Danışmanı</span>
+              </div>
+              <div class="testimonial-stars" aria-label="5 üzerinden 5 puan">
+                <i class="ri-star-fill"></i><i class="ri-star-fill"></i
+                ><i class="ri-star-fill"></i><i class="ri-star-fill"></i
+                ><i class="ri-star-fill"></i>
+              </div>
+            </div>
+            <p>
+              Özen Koltuk sayesinde yaşam alanımı güzel ve uygun fiyatlı
+              mobilyalarla yeniledim.
+            </p>
+          </div>
+        </article>
+        <article class="testimonial-item">
+          <div class="testimonial-content">
+            <div class="testimonial-top">
+              <div>
+                <h3>Ahmet Yılmaz</h3>
+                <span>İşletme Sahibi</span>
+              </div>
+              <div class="testimonial-stars" aria-label="5 üzerinden 5 puan">
+                <i class="ri-star-fill"></i><i class="ri-star-fill"></i
+                ><i class="ri-star-fill"></i><i class="ri-star-fill"></i
+                ><i class="ri-star-fill"></i>
+              </div>
+            </div>
+            <p>
+              Ürünlerin kalitesi ve tasarımı beklentilerimi karşıladı. Alışveriş
+              deneyimim çok iyiydi.
+            </p>
+          </div>
+        </article>
+        <article class="testimonial-item">
+          <div class="testimonial-content">
+            <div class="testimonial-top">
+              <div>
+                <h3>Elif Demir</h3>
+                <span>Öğretmen</span>
+              </div>
+              <div class="testimonial-stars" aria-label="5 üzerinden 5 puan">
+                <i class="ri-star-fill"></i><i class="ri-star-fill"></i
+                ><i class="ri-star-fill"></i><i class="ri-star-fill"></i
+                ><i class="ri-star-fill"></i>
+              </div>
+            </div>
+            <p>
+              Mobilyalar hem şık hem de kullanışlı. Kesinlikle tekrar alışveriş
+              yapacağım.
+            </p>
+          </div>
+        </article>
+      </div>
+
+      <form class="comment-form" id="comment-form" novalidate>
+        <h3>Siz de Yorum Yapın</h3>
+        <p class="comment-form__hint">
+          Deneyiminizi diğer müşterilerimizle paylaşın.
+        </p>
+
+        <div class="comment-form__row">
+          <div class="field">
+            <label for="c-name">Ad Soyad *</label>
+            <input
+              type="text"
+              id="c-name"
+              name="name"
+              maxlength="40"
+              placeholder="Adınız"
+              required
+            />
+          </div>
+          <div class="field">
+            <label for="c-job">Meslek (isteğe bağlı)</label>
+            <input
+              type="text"
+              id="c-job"
+              name="job"
+              maxlength="40"
+              placeholder="Örn. Mimar"
+            />
+          </div>
+        </div>
+
+        <div class="field">
+          <span class="field-label">Puanınız</span>
+          <div class="star-input" role="radiogroup" aria-label="Puan">
+            <input
+              type="radio"
+              id="star5"
+              name="rating"
+              value="5"
+              checked
+            /><label for="star5" title="5 yıldız"
+              ><i class="ri-star-fill"></i
+            ></label>
+            <input type="radio" id="star4" name="rating" value="4" /><label
+              for="star4"
+              title="4 yıldız"
+              ><i class="ri-star-fill"></i
+            ></label>
+            <input type="radio" id="star3" name="rating" value="3" /><label
+              for="star3"
+              title="3 yıldız"
+              ><i class="ri-star-fill"></i
+            ></label>
+            <input type="radio" id="star2" name="rating" value="2" /><label
+              for="star2"
+              title="2 yıldız"
+              ><i class="ri-star-fill"></i
+            ></label>
+            <input type="radio" id="star1" name="rating" value="1" /><label
+              for="star1"
+              title="1 yıldız"
+              ><i class="ri-star-fill"></i
+            ></label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="c-text">Yorumunuz *</label>
+          <textarea
+            id="c-text"
+            name="text"
+            rows="4"
+            maxlength="400"
+            placeholder="Yorumunuzu buraya yazın..."
+            required
+          ></textarea>
+          <small class="char-count"><span id="char-count">0</span>/400</small>
+        </div>
+
+        <p
+          class="comment-form__msg"
+          id="comment-msg"
+          role="status"
+          aria-live="polite"
+        ></p>
+        <button type="submit" class="comment-submit">Yorumu Gönder</button>
+      </form>
+    </section>
+
+    <section class="section__container contact__container" id="contact">
+      <h2 class="section__header">İletişim</h2>
+      <p class="section__description">Bize ulaşın, mağazamızı ziyaret edin.</p>
+
+      <div class="contact__content">
+        <div class="contact__info">
+          <div class="contact__item">
+            <span class="contact__icon"><i class="ri-map-pin-2-line"></i></span>
+            <div>
+              <h4>Adres</h4>
+              <p>Seyhan, 701. Sk. No:53, 35380 Buca/İzmir</p>
+            </div>
+          </div>
+          <div class="contact__item">
+            <span class="contact__icon"><i class="ri-phone-line"></i></span>
+            <div>
+              <h4>Telefon</h4>
+              <p><a href="tel:+900000000000">0 (537) 323 49 27</a></p>
+            </div>
+          </div>
+          <div class="contact__item">
+            <span class="contact__icon"><i class="ri-mail-line"></i></span>
+            <div>
+              <h4>E-posta</h4>
+              <p><a href="mailto:info@ornek.com">ozenkoltuk@gmail.com</a></p>
+            </div>
+          </div>
+          <div class="contact__item">
+            <span class="contact__icon"><i class="ri-time-line"></i></span>
+            <div>
+              <h4>Çalışma Saatleri</h4>
+              <p>Pazartesi - Cumartesi: 09:00 - 19:00</p>
+            </div>
+          </div>
+          <a
+            class="contact__directions"
+            href="https://www.google.com/maps/dir/?api=1&destination=38.371702,27.140392"
+            target="_blank"
+            rel="noopener"
+          >
+            <i class="ri-direction-line"></i> Yol Tarifi Al
+          </a>
+        </div>
+
+        <div class="contact__map">
+          <iframe
+            title="Özen Koltuk konumu"
+            src="https://maps.google.com/maps?q=38.371702,27.140392&hl=tr&z=17&output=embed"
+            loading="lazy"
+            allowfullscreen
+            referrerpolicy="no-referrer-when-downgrade"
+          ></iframe>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="section__container footer__container">
+        <div class="footer__col">
+          <div class="footer__logo">
+            <a href="#home" class="logo">Özen Koltuk</a>
+          </div>
+          <p>
+            Zarafeti ve işlevselliği bir araya getiren mobilyalarımızla yaşam
+            alanlarınızı birlikte güzelleştirelim.
+          </p>
+          <ul class="footer__socials">
+            <li>
+              <a href="#" aria-label="Facebook"
+                ><i class="ri-facebook-fill"></i
+              ></a>
+            </li>
+            <li>
+              <a href="#" aria-label="Twitter"
+                ><i class="ri-twitter-fill"></i
+              ></a>
+            </li>
+            <li>
+              <a href="#" aria-label="LinkedIn"
+                ><i class="ri-linkedin-fill"></i
+              ></a>
+            </li>
+            <li>
+              <a href="#" aria-label="Pinterest"
+                ><i class="ri-pinterest-fill"></i
+              ></a>
+            </li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h4>Hizmetler</h4>
+          <ul class="footer__links">
+            <li><a href="#">Bize Ulaşın</a></li>
+            <li><a href="#">Basın</a></li>
+            <li><a href="#">Ödeme Bilgileri</a></li>
+            <li><a href="#">Kütüphane</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Yardım Merkezi</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h4>Kaynaklar</h4>
+          <ul class="footer__links">
+            <li><a href="#">Fiyatlandırma</a></li>
+            <li><a href="#">Sıkça Sorulan Sorular</a></li>
+            <li><a href="#">Destek Ekibi</a></li>
+            <li><a href="#">Gizlilik Politikası</a></li>
+            <li><a href="#">Kullanım Koşulları</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h4>Destek</h4>
+          <ul class="footer__links">
+            <li><a href="#contact">İletişim</a></li>
+            <li><a href="#">İş Ortaklığı</a></li>
+            <li><a href="#">Site Haritası</a></li>
+            <li><a href="#">İptal Politikası</a></li>
+            <li><a href="#">Güvenlik</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__bar">
+        Telif Hakkı © 2025 Özen Koltuk. Tüm hakları saklıdır.
+      </div>
+    </footer>
+
+    <script src="https://unpkg.com/scrollreveal"></script>
+    <script src="main.js"></script>
+    <script>
+      // ---------- Yorumlar ----------
+      (function () {
+        try {
+          const form =
+            document.getElementById("comment-form") ||
+            document.querySelector(".comment-form");
+          const list =
+            document.getElementById("testimonial-list") ||
+            document.querySelector(".testimonial-list");
+          if (!form || !list) {
+            console.error("Yorum formu veya liste bulunamadı", { form, list });
+            return;
+          }
+
+          const KEY = "ozen-comments";
+          const msg = document.getElementById("comment-msg");
+          const textEl = document.getElementById("c-text");
+          const countEl = document.getElementById("char-count");
+
+          let saved = [];
+          try {
+            saved = JSON.parse(localStorage.getItem(KEY)) || [];
+          } catch (e) {
+            saved = [];
+          }
+
+          function buildItem(c) {
+            const art = document.createElement("article");
+            art.className = "testimonial-item";
+
+            const content = document.createElement("div");
+            content.className = "testimonial-content";
+
+            const top = document.createElement("div");
+            top.className = "testimonial-top";
+
+            const who = document.createElement("div");
+            const h3 = document.createElement("h3");
+            h3.textContent = c.name;
+            who.appendChild(h3);
+            if (c.job) {
+              const span = document.createElement("span");
+              span.textContent = c.job;
+              who.appendChild(span);
+            }
+
+            const st = document.createElement("div");
+            st.className = "testimonial-stars";
+            st.setAttribute("aria-label", `5 üzerinden ${c.rating} puan`);
+            for (let i = 1; i <= 5; i++) {
+              const ic = document.createElement("i");
+              ic.className = i <= c.rating ? "ri-star-fill" : "ri-star-line";
+              st.appendChild(ic);
+            }
+
+            top.append(who, st);
+
+            const p = document.createElement("p");
+            p.textContent = c.text;
+
+            content.append(top, p);
+
+            if (c.date) {
+              const d = document.createElement("small");
+              d.className = "testimonial-date";
+              d.textContent = c.date;
+              content.appendChild(d);
+            }
+
+            art.appendChild(content);
+            return art;
+          }
+
+          // Kayıtlı yorumları en yeni üstte olacak şekilde listenin başına ekle
+          [...saved].reverse().forEach((c) => list.prepend(buildItem(c)));
+
+          textEl.addEventListener(
+            "input",
+            () => (countEl.textContent = textEl.value.length),
+          );
+
+          form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const name = form.elements.name.value.trim();
+            const job = form.elements.job.value.trim();
+            const text = form.elements.text.value.trim();
+            const rating = Number(form.elements.rating.value) || 5;
+
+            form.elements.name.classList.toggle("invalid", !name);
+            form.elements.text.classList.toggle("invalid", !text);
+
+            if (!name || !text) {
+              msg.className = "comment-form__msg error";
+              msg.textContent = "Lütfen adınızı ve yorumunuzu yazın.";
+              return;
+            }
+
+            const comment = {
+              name,
+              job,
+              text,
+              rating,
+              date: new Date().toLocaleDateString("tr-TR", {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              }),
+            };
+
+            saved.unshift(comment);
+            saved = saved.slice(0, 50);
+            try {
+              localStorage.setItem(KEY, JSON.stringify(saved));
+            } catch (err) {}
+
+            list.prepend(buildItem(comment));
+            form.reset();
+            countEl.textContent = "0";
+            msg.className = "comment-form__msg ok";
+            msg.textContent = "Yorumunuz eklendi, teşekkür ederiz!";
+            setTimeout(() => (msg.textContent = ""), 4000);
+          });
+        } catch (err) {
+          console.error("Yorum bölümü hatası:", err);
+        }
+      })();
+    </script>
+  </body>
+</html>

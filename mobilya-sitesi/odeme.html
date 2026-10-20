@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ödeme - Adım 3</title>
+    <link rel="stylesheet" href="odeme.style.css" />
+  </head>
+  <body>
+    <div class="checkout-container">
+      <div class="checkout-main">
+        <!-- Stepper Indicator -->
+        <div class="checkout-stepper">
+          <div
+            class="step completed"
+            onclick="window.location.href = 'adres.html'"
+          >
+            <span class="step-number">✓</span>
+            <span class="step-title">Adres Bilgileri</span>
+          </div>
+          <div class="step-line"></div>
+          <div
+            class="step completed"
+            onclick="window.location.href = 'kargo.html'"
+          >
+            <span class="step-number">✓</span>
+            <span class="step-title">Kargo Seçimi</span>
+          </div>
+          <div class="step-line"></div>
+          <div class="step active">
+            <span class="step-number">3</span>
+            <span class="step-title">Ödeme Seçenekleri</span>
+          </div>
+        </div>
+
+        <h2>3. Kart ile Ödeme Bilgileri</h2>
+        <form id="payment-form">
+          <div class="form-group">
+            <label for="card-name">Kart Üzerindeki İsim *</label>
+            <input
+              type="text"
+              id="card-name"
+              required
+              placeholder="AHMET YILMAZ"
+            />
+          </div>
+          <div class="form-group">
+            <label for="card-number">Kart Numarası *</label>
+            <input
+              type="text"
+              id="card-number"
+              maxlength="19"
+              required
+              placeholder="0000 0000 0000 0000"
+            />
+          </div>
+          <div class="form-group-row">
+            <div class="form-group">
+              <label for="card-expiry">Son Kullanma Tarihi *</label>
+              <input
+                type="text"
+                id="card-expiry"
+                placeholder="AA/YY"
+                maxlength="5"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="card-cvc">CVC / CVV *</label>
+              <input
+                type="password"
+                id="card-cvc"
+                maxlength="3"
+                required
+                placeholder="123"
+              />
+            </div>
+          </div>
+
+          <div class="step-buttons">
+            <button
+              type="button"
+              class="prev-step-btn"
+              onclick="window.location.href = 'kargo.html'"
+            >
+              Geri
+            </button>
+            <button type="submit" class="submit-order-btn">
+              Siparişi Onayla ve Öde
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Sipariş Özeti -->
+      <div class="order-summary-section">
+        <h3>Sipariş Özeti</h3>
+        <div id="checkout-cart-items" class="summary-items"></div>
+        <div class="summary-totals">
+          <div class="summary-row">
+            <span>Ara Toplam:</span>
+            <span id="subtotal-price">0.00 TL</span>
+          </div>
+          <div class="summary-row">
+            <span>Kargo Ücreti:</span>
+            <span id="shipping-price">30.00 TL</span>
+          </div>
+          <hr />
+          <div class="summary-row total-row">
+            <span>Toplam Tutar:</span>
+            <span id="final-total-price">0.00 TL</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const shippingCost =
+          parseFloat(localStorage.getItem("shippingCost")) || 30;
+        loadCartSummary(shippingCost);
+
+        document
+          .getElementById("payment-form")
+          .addEventListener("submit", (e) => {
+            e.preventDefault();
+            const address =
+              JSON.parse(localStorage.getItem("checkoutAddress")) || {};
+            alert(
+              `Tebrikler ${address.fullname || "Müşterimiz"}! Siparişiniz başarıyla alındı.`,
+            );
+            localStorage.removeItem("userCart");
+            localStorage.removeItem("checkoutAddress");
+            localStorage.removeItem("shippingCost");
+            window.location.href = "index.html";
+          });
+      });
+
+      function loadCartSummary(shippingCost) {
+        const cart = JSON.parse(localStorage.getItem("userCart")) || [];
+        const container = document.getElementById("checkout-cart-items");
+        let subtotal = 0;
+        container.innerHTML = "";
+        cart.forEach((item) => {
+          const total = item.price * item.quantity;
+          subtotal += total;
+          container.innerHTML += `<div class="summary-item"><span>${item.name} (x${item.quantity})</span><strong>${total.toLocaleString("tr-TR")} TL</strong></div>`;
+        });
+        document.getElementById("subtotal-price").textContent =
+          `${subtotal.toLocaleString("tr-TR")} TL`;
+        document.getElementById("shipping-price").textContent =
+          `${shippingCost.toLocaleString("tr-TR")} TL`;
+        document.getElementById("final-total-price").textContent =
+          `${(subtotal + shippingCost).toLocaleString("tr-TR")} TL`;
+      }
+    </script>
+  </body>
+</html>

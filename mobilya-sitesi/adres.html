@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Adres Bilgileri - Adım 1</title>
+    <link rel="stylesheet" href="odeme.style.css" />
+  </head>
+  <body>
+    <div class="checkout-container">
+      <div class="checkout-main">
+        <!-- Stepper Indicator -->
+        <div class="checkout-stepper">
+          <div class="step active">
+            <span class="step-number">1</span>
+            <span class="step-title">Adres Bilgileri</span>
+          </div>
+          <div class="step-line"></div>
+          <div class="step disabled">
+            <span class="step-number">2</span>
+            <span class="step-title">Kargo Seçimi</span>
+          </div>
+          <div class="step-line"></div>
+          <div class="step disabled">
+            <span class="step-number">3</span>
+            <span class="step-title">Ödeme Seçenekleri</span>
+          </div>
+        </div>
+
+        <h2>1. Teslimat ve İletişim Bilgileri</h2>
+        <form id="address-form">
+          <div class="form-group-row">
+            <div class="form-group">
+              <label for="fullname">Ad Soyad *</label>
+              <input
+                type="text"
+                id="fullname"
+                required
+                placeholder="Ahmet Yılmaz"
+              />
+            </div>
+            <div class="form-group">
+              <label for="phone">Telefon *</label>
+              <input
+                type="tel"
+                id="phone"
+                required
+                placeholder="05XX XXX XX XX"
+              />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="email">E-posta Adresi *</label>
+            <input
+              type="email"
+              id="email"
+              required
+              placeholder="ornek@email.com"
+            />
+          </div>
+          <div class="form-group">
+            <label for="address">Teslimat Adresi *</label>
+            <textarea
+              id="address"
+              rows="3"
+              required
+              placeholder="Mahalle, Cadde, Sokak, No, Daire, İl / İlçe"
+            ></textarea>
+          </div>
+
+          <button type="submit" class="next-step-btn">
+            Kaydet ve Kargo Seçimine Geç
+          </button>
+        </form>
+      </div>
+
+      <!-- Sipariş Özeti -->
+      <div class="order-summary-section">
+        <h3>Sipariş Özeti</h3>
+        <div id="checkout-cart-items" class="summary-items"></div>
+        <div class="summary-totals">
+          <div class="summary-row">
+            <span>Ara Toplam:</span>
+            <span id="subtotal-price">0.00 TL</span>
+          </div>
+          <div class="summary-row">
+            <span>Kargo Ücreti:</span>
+            <span id="shipping-price">30.00 TL</span>
+          </div>
+          <hr />
+          <div class="summary-row total-row">
+            <span>Toplam Tutar:</span>
+            <span id="final-total-price">0.00 TL</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        loadCartSummary(30);
+
+        const savedAddress = JSON.parse(
+          localStorage.getItem("checkoutAddress"),
+        );
+        if (savedAddress) {
+          document.getElementById("fullname").value =
+            savedAddress.fullname || "";
+          document.getElementById("phone").value = savedAddress.phone || "";
+          document.getElementById("email").value = savedAddress.email || "";
+          document.getElementById("address").value = savedAddress.address || "";
+        }
+
+        document
+          .getElementById("address-form")
+          .addEventListener("submit", (e) => {
+            e.preventDefault();
+            const addressData = {
+              fullname: document.getElementById("fullname").value,
+              phone: document.getElementById("phone").value,
+              email: document.getElementById("email").value,
+              address: document.getElementById("address").value,
+            };
+            localStorage.setItem(
+              "checkoutAddress",
+              JSON.stringify(addressData),
+            );
+            window.location.href = "kargo.html"; // Kargo sayfasına git
+          });
+      });
+
+      function loadCartSummary(shippingCost) {
+        const cart = JSON.parse(localStorage.getItem("userCart")) || [];
+        const container = document.getElementById("checkout-cart-items");
+        let subtotal = 0;
+        container.innerHTML = "";
+        cart.forEach((item) => {
+          const total = item.price * item.quantity;
+          subtotal += total;
+          container.innerHTML += `<div class="summary-item"><span>${item.name} (x${item.quantity})</span><strong>${total.toLocaleString("tr-TR")} TL</strong></div>`;
+        });
+        document.getElementById("subtotal-price").textContent =
+          `${subtotal.toLocaleString("tr-TR")} TL`;
+        document.getElementById("shipping-price").textContent =
+          `${shippingCost.toLocaleString("tr-TR")} TL`;
+        document.getElementById("final-total-price").textContent =
+          `${(subtotal + shippingCost).toLocaleString("tr-TR")} TL`;
+      }
+    </script>
+  </body>
+</html>
