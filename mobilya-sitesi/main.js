@@ -1,18 +1,18 @@
-// ---------- Siparişi Tamamla -> odeme.html (en başta, hata olsa da çalışsın) ----------
+// ---------- Siparişi Tamamla -> adres.html (en başta, hata olsa da çalışsın) ----------
 document.addEventListener("click", (e) => {
   const btn = e.target.closest(".checkout-btn");
   if (!btn) return;
 
   let saved = [];
   try {
-    saved = JSON.parse(localStorage.getItem("ozen-cart")) || [];
+    saved = JSON.parse(localStorage.getItem("userCart")) || [];
   } catch (err) {}
 
   if (saved.length === 0) {
     alert("Sepetiniz boş. Önce bir ürün ekleyin.");
     return;
   }
-  window.location.href = "odeme.html";
+  window.location.href = "adres.html";
 });
 
 // ---------- Yardımcılar ----------
@@ -48,16 +48,33 @@ const cartItemsEl = $("cart-items");
 const cartCountEl = $("cart-count");
 const cartTotalEl = $("cart-total-price");
 
+// Eski sürümden kalan sepet kaydını temizle
+try {
+  localStorage.removeItem("ozen-cart");
+} catch (e) {}
+
+// Ödeme tamamlandıysa (odeme.html -> index.html?siparis=tamam) sepeti sıfırla
+if (new URLSearchParams(window.location.search).get("siparis") === "tamam") {
+  try {
+    localStorage.removeItem("userCart");
+  } catch (e) {}
+  history.replaceState(
+    null,
+    "",
+    window.location.pathname + window.location.hash,
+  );
+}
+
 let cart = [];
 try {
-  cart = JSON.parse(localStorage.getItem("ozen-cart")) || [];
+  cart = JSON.parse(localStorage.getItem("userCart")) || [];
 } catch (e) {
   cart = [];
 }
 
 const saveCart = () => {
   try {
-    localStorage.setItem("ozen-cart", JSON.stringify(cart));
+    localStorage.setItem("userCart", JSON.stringify(cart));
   } catch (e) {}
 };
 
@@ -81,7 +98,7 @@ function renderCart() {
       </div>
       <div class="cart-item-qty">
         <button type="button" data-action="dec" data-id="${item.id}" aria-label="Azalt">−</button>
-        <span>${item.qty}</span>
+        <span>${item.quantity}</span>
         <button type="button" data-action="inc" data-id="${item.id}" aria-label="Arttır">+</button>
         <button type="button" data-action="remove" data-id="${item.id}" aria-label="Sil">
           <i class="ri-delete-bin-line"></i>
@@ -91,8 +108,8 @@ function renderCart() {
     cartItemsEl.appendChild(li);
   });
 
-  const count = cart.reduce((s, i) => s + i.qty, 0);
-  const total = cart.reduce((s, i) => s + i.qty * i.price, 0);
+  const count = cart.reduce((s, i) => s + i.quantity, 0);
+  const total = cart.reduce((s, i) => s + i.quantity * i.price, 0);
   cartCountEl.textContent = count;
   cartTotalEl.textContent = fmtTL(total);
   saveCart();
@@ -100,8 +117,8 @@ function renderCart() {
 
 function addToCart({ id, name, price }) {
   const found = cart.find((i) => i.id === id);
-  if (found) found.qty += 1;
-  else cart.push({ id, name, price, qty: 1 });
+  if (found) found.quantity += 1;
+  else cart.push({ id, name, price, quantity: 1 });
   renderCart();
 }
 
@@ -128,9 +145,9 @@ cartItemsEl.addEventListener("click", (e) => {
   const item = cart.find((i) => i.id === btn.dataset.id);
   if (!item) return;
 
-  if (btn.dataset.action === "inc") item.qty += 1;
-  if (btn.dataset.action === "dec") item.qty -= 1;
-  if (btn.dataset.action === "remove" || item.qty <= 0)
+  if (btn.dataset.action === "inc") item.quantity += 1;
+  if (btn.dataset.action === "dec") item.quantity -= 1;
+  if (btn.dataset.action === "remove" || item.quantity <= 0)
     cart = cart.filter((i) => i.id !== item.id);
 
   renderCart();
@@ -150,6 +167,17 @@ document.addEventListener("click", (e) => {
 });
 
 renderCart();
+
+// Tarayıcının "geri" tuşuyla dönülünce sayfa önbellekten gelir; sepeti yeniden oku
+window.addEventListener("pageshow", (e) => {
+  if (!e.persisted) return;
+  try {
+    cart = JSON.parse(localStorage.getItem("userCart")) || [];
+  } catch (err) {
+    cart = [];
+  }
+  renderCart();
+});
 
 // ---------- Ürün arama + kategori filtresi ----------
 const searchInput = $("search-input");

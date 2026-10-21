@@ -5,11 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Ödeme - Adım 3</title>
     <link rel="stylesheet" href="odeme.style.css" />
+    <style>
+      .summary-address {
+        margin: 1rem 0;
+        padding: 0.9rem 1rem;
+        background: #f4f6f5;
+        border-radius: 10px;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        color: #444;
+      }
+      .summary-address strong {
+        display: block;
+        margin-bottom: 0.2rem;
+        color: #254d4d;
+      }
+      #pay-error {
+        color: #d64545;
+        min-height: 1.3em;
+        margin: 0.5rem 0;
+      }
+      .submit-order-btn:disabled {
+        opacity: 0.6;
+        cursor: wait;
+      }
+    </style>
   </head>
   <body>
     <div class="checkout-container">
       <div class="checkout-main">
-        <!-- Stepper Indicator -->
+        <!-- Adım göstergesi -->
         <div class="checkout-stepper">
           <div
             class="step completed"
@@ -34,7 +59,7 @@
         </div>
 
         <h2>3. Kart ile Ödeme Bilgileri</h2>
-        <form id="payment-form">
+        <form id="payment-form" novalidate autocomplete="off">
           <div class="form-group">
             <label for="card-name">Kart Üzerindeki İsim *</label>
             <input
@@ -49,6 +74,7 @@
             <input
               type="text"
               id="card-number"
+              inputmode="numeric"
               maxlength="19"
               required
               placeholder="0000 0000 0000 0000"
@@ -60,6 +86,7 @@
               <input
                 type="text"
                 id="card-expiry"
+                inputmode="numeric"
                 placeholder="AA/YY"
                 maxlength="5"
                 required
@@ -70,12 +97,15 @@
               <input
                 type="password"
                 id="card-cvc"
+                inputmode="numeric"
                 maxlength="3"
                 required
                 placeholder="123"
               />
             </div>
           </div>
+
+          <p id="pay-error" role="alert"></p>
 
           <div class="step-buttons">
             <button
@@ -85,7 +115,7 @@
             >
               Geri
             </button>
-            <button type="submit" class="submit-order-btn">
+            <button type="submit" class="submit-order-btn" id="pay-btn">
               Siparişi Onayla ve Öde
             </button>
           </div>
@@ -96,62 +126,177 @@
       <div class="order-summary-section">
         <h3>Sipariş Özeti</h3>
         <div id="checkout-cart-items" class="summary-items"></div>
+
+        <div class="summary-address" id="summary-address" hidden>
+          <strong>Teslimat Adresi</strong>
+          <span id="summary-address-text"></span>
+        </div>
+
         <div class="summary-totals">
           <div class="summary-row">
             <span>Ara Toplam:</span>
-            <span id="subtotal-price">0.00 TL</span>
+            <span id="subtotal-price">0,00 TL</span>
           </div>
           <div class="summary-row">
             <span>Kargo Ücreti:</span>
-            <span id="shipping-price">30.00 TL</span>
+            <span id="shipping-price">0,00 TL</span>
           </div>
           <hr />
           <div class="summary-row total-row">
             <span>Toplam Tutar:</span>
-            <span id="final-total-price">0.00 TL</span>
+            <span id="final-total-price">0,00 TL</span>
           </div>
         </div>
       </div>
     </div>
 
     <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const shippingCost =
-          parseFloat(localStorage.getItem("shippingCost")) || 30;
-        loadCartSummary(shippingCost);
+      const fmt = (n) =>
+        n.toLocaleString("tr-TR", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }) + " TL";
 
-        document
-          .getElementById("payment-form")
-          .addEventListener("submit", (e) => {
-            e.preventDefault();
-            const address =
-              JSON.parse(localStorage.getItem("checkoutAddress")) || {};
-            alert(
-              `Tebrikler ${address.fullname || "Müşterimiz"}! Siparişiniz başarıyla alındı.`,
-            );
-            localStorage.removeItem("userCart");
-            localStorage.removeItem("checkoutAddress");
-            localStorage.removeItem("shippingCost");
-            window.location.href = "index.html";
-          });
+      const read = (key, fallback) => {
+        try {
+          const v = JSON.parse(localStorage.getItem(key));
+          return v === null || v === undefined ? fallback : v;
+        } catch (e) {
+          return fallback;
+        }
+      };
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const cart = read("userCart", []);
+        const address = read("checkoutAddress", null);
+        const rawShipping = localStorage.getItem("shippingCost");
+
+        // Güvenlik: akışın önceki adımları atlanmışsa geri gönder
+        if (!Array.isArray(cart) || cart.length === 0) {
+          alert("Sepetiniz boş! Ana sayfaya yönlendiriliyorsunuz.");
+          window.location.href = "index.html";
+          return;
+        }
+        if (!address || !address.fullname) {
+          window.location.href = "adres.html";
+          return;
+        }
+        if (rawShipping === null) {
+          window.location.href = "kargo.html";
+          return;
+        }
+
+        const shippingCost = Number(rawShipping) || 0;
+        loadSummary(cart, address, shippingCost);
+        setupCardInputs();
+
+        const form = document.getElementById("payment-form");
+        const errorEl = document.getElementById("pay-error");
+        const payBtn = document.getElementById("pay-btn");
+
+        form.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const error = validateCard();
+          if (error) {
+            errorEl.textContent = error;
+            return;
+          }
+          errorEl.textContent = "";
+          payBtn.disabled = true; // çift tıklamayı engelle
+
+          alert(`Tebrikler ${address.fullname}! Siparişiniz başarıyla alındı.`);
+
+          // Sepeti ve sipariş verilerini temizle
+          localStorage.removeItem("userCart");
+          localStorage.removeItem("checkoutAddress");
+          localStorage.removeItem("shippingCost");
+          localStorage.removeItem("ozen-cart"); // eski sürümden kalan kayıt
+          window.location.href = "index.html?siparis=tamam";
+        });
       });
 
-      function loadCartSummary(shippingCost) {
-        const cart = JSON.parse(localStorage.getItem("userCart")) || [];
+      function loadSummary(cart, address, shippingCost) {
         const container = document.getElementById("checkout-cart-items");
+        container.replaceChildren();
         let subtotal = 0;
-        container.innerHTML = "";
+
         cart.forEach((item) => {
-          const total = item.price * item.quantity;
+          const total = Number(item.price) * Number(item.quantity);
           subtotal += total;
-          container.innerHTML += `<div class="summary-item"><span>${item.name} (x${item.quantity})</span><strong>${total.toLocaleString("tr-TR")} TL</strong></div>`;
+
+          const row = document.createElement("div");
+          row.className = "summary-item";
+          const name = document.createElement("span");
+          name.textContent = `${item.name} (x${item.quantity})`;
+          const price = document.createElement("strong");
+          price.textContent = fmt(total);
+          row.append(name, price);
+          container.appendChild(row);
         });
-        document.getElementById("subtotal-price").textContent =
-          `${subtotal.toLocaleString("tr-TR")} TL`;
+
+        document.getElementById("subtotal-price").textContent = fmt(subtotal);
         document.getElementById("shipping-price").textContent =
-          `${shippingCost.toLocaleString("tr-TR")} TL`;
-        document.getElementById("final-total-price").textContent =
-          `${(subtotal + shippingCost).toLocaleString("tr-TR")} TL`;
+          shippingCost === 0 ? "Ücretsiz" : fmt(shippingCost);
+        document.getElementById("final-total-price").textContent = fmt(
+          subtotal + shippingCost,
+        );
+
+        document.getElementById("summary-address-text").textContent =
+          `${address.fullname} — ${address.address || ""}`;
+        document.getElementById("summary-address").hidden = false;
+      }
+
+      function setupCardInputs() {
+        const number = document.getElementById("card-number");
+        const expiry = document.getElementById("card-expiry");
+        const cvc = document.getElementById("card-cvc");
+
+        // Kart no: sadece rakam, 4'erli boşluk
+        number.addEventListener("input", () => {
+          const digits = number.value.replace(/\D/g, "").slice(0, 16);
+          number.value = digits.replace(/(.{4})/g, "$1 ").trim();
+        });
+
+        // SKT: AA/YY
+        expiry.addEventListener("input", () => {
+          let d = expiry.value.replace(/\D/g, "").slice(0, 4);
+          if (d.length >= 3) d = d.slice(0, 2) + "/" + d.slice(2);
+          expiry.value = d;
+        });
+
+        // CVC: sadece rakam
+        cvc.addEventListener("input", () => {
+          cvc.value = cvc.value.replace(/\D/g, "").slice(0, 3);
+        });
+      }
+
+      function validateCard() {
+        const name = document.getElementById("card-name").value.trim();
+        const number = document
+          .getElementById("card-number")
+          .value.replace(/\s/g, "");
+        const expiry = document.getElementById("card-expiry").value;
+        const cvc = document.getElementById("card-cvc").value;
+
+        if (name.length < 3) return "Lütfen kart üzerindeki ismi girin.";
+        if (!/^\d{16}$/.test(number))
+          return "Kart numarası 16 haneli olmalıdır.";
+
+        const m = expiry.match(/^(\d{2})\/(\d{2})$/);
+        if (!m) return "Son kullanma tarihini AA/YY biçiminde girin.";
+        const month = Number(m[1]);
+        const year = 2000 + Number(m[2]);
+        if (month < 1 || month > 12) return "Geçersiz ay girdiniz.";
+        const now = new Date();
+        if (
+          year < now.getFullYear() ||
+          (year === now.getFullYear() && month < now.getMonth() + 1)
+        ) {
+          return "Kartınızın son kullanma tarihi geçmiş.";
+        }
+
+        if (!/^\d{3}$/.test(cvc)) return "CVC 3 haneli olmalıdır.";
+        return "";
       }
     </script>
   </body>

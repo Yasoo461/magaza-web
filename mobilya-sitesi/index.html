@@ -8,7 +8,6 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
-    <link rel="stylesheet" href="extra.css" />
     <title>Özen Koltuk</title>
   </head>
   <body>
@@ -34,6 +33,29 @@
       </nav>
 
       <div class="nav-actions">
+        <div class="nav-social">
+          <a
+            href="https://wa.me/905XXXXXXXXX?text=Merhaba%2C%20bilgi%20almak%20istiyorum."
+            class="social-link whatsapp"
+            target="_blank"
+            rel="noopener"
+            aria-label="WhatsApp ile yaz"
+            title="WhatsApp"
+          >
+            <i class="ri-whatsapp-line" aria-hidden="true"></i>
+          </a>
+          <a
+            href="https://instagram.com/KULLANICI_ADI"
+            class="social-link instagram"
+            target="_blank"
+            rel="noopener"
+            aria-label="Instagram"
+            title="Instagram"
+          >
+            <i class="ri-instagram-line" aria-hidden="true"></i>
+          </a>
+        </div>
+
         <div class="nav-search" id="nav-search">
           <input
             type="search"
@@ -118,23 +140,8 @@
         <div>
           <h2 class="section__header">Hakkımızda</h2>
           <p class="section__description">
-            20 yılı aşkın üretim tecrübemizle kaliteyi, konforu ve şıklığı bir
-            araya getiriyoruz. Mobilya ve koltuk üretiminde edindiğimiz yılların
-            deneyimini, özenle seçilmiş kaliteli malzemeler ve titiz işçilikle
-            buluşturuyoruz. Her ürünümüzde estetik tasarımı, kullanım konforunu
-            ve uzun ömürlü sağlamlığı ön planda tutuyoruz. Üretimin her
-            aşamasında kalite standartlarımızdan ödün vermeden, müşterilerimizin
-            beklenti ve ihtiyaçlarına uygun çözümler sunuyoruz. Bizim için
-            başarı yalnızca şık ürünler üretmek değil, aynı zamanda
-            müşterilerimizin güvenini kazanmak ve satış sonrasında da
-            memnuniyetlerini sürdürmektir. Kaliteye verdiğimiz önem,
-            işçiliğimize duyduğumuz güven ve müşteri memnuniyetine olan
-            bağlılığımızla ürettiğimiz her ürünün arkasında duruyoruz. Satın
-            aldığınız ürünlerde sağlamlık ve dayanıklılığı önemsiyor,
-            ürünlerimiz için sunduğumuz garanti kapsamında güvenilir bir
-            alışveriş deneyimi sağlıyoruz. Biz, yalnızca koltuk üretmiyor; yaşam
-            alanlarınıza değer katan, uzun yıllar keyifle kullanabileceğiniz
-            ürünler sunuyoruz.
+            Üstün işçiliğe olan tutkumuzla evinizin her odası için en iyi
+            mobilyaları özenle seçiyor ve sizlere sunuyoruz.
           </p>
         </div>
         <button class="about__btn" type="button">Daha Fazla Bilgi</button>
@@ -193,6 +200,7 @@
     </section>
 
     <section class="section__container product__container" id="product">
+      <span class="section__eyebrow">KOLEKSİYON</span>
       <h2 class="section__header">Ürünlerimiz</h2>
       <p class="section__description">
         Konforlu ve şık tasarımlarımızı inceleyin.
@@ -399,6 +407,17 @@
         </article>
       </div>
 
+      <div class="testimonial-more">
+        <button
+          type="button"
+          id="more-comments"
+          class="more-comments-btn"
+          aria-expanded="false"
+          aria-controls="testimonial-list"
+          hidden
+        ></button>
+      </div>
+
       <form class="comment-form" id="comment-form" novalidate>
         <h3>Siz de Yorum Yapın</h3>
         <p class="comment-form__hint">
@@ -497,21 +516,21 @@
             <span class="contact__icon"><i class="ri-map-pin-2-line"></i></span>
             <div>
               <h4>Adres</h4>
-              <p>Seyhan, 701. Sk. No:53, 35380 Buca/İzmir</p>
+              <p>Mağaza adresinizi buraya yazın</p>
             </div>
           </div>
           <div class="contact__item">
             <span class="contact__icon"><i class="ri-phone-line"></i></span>
             <div>
               <h4>Telefon</h4>
-              <p><a href="tel:+900000000000">0 (537) 323 49 27</a></p>
+              <p><a href="tel:+900000000000">0 (000) 000 00 00</a></p>
             </div>
           </div>
           <div class="contact__item">
             <span class="contact__icon"><i class="ri-mail-line"></i></span>
             <div>
               <h4>E-posta</h4>
-              <p><a href="mailto:info@ornek.com">ozenkoltuk@gmail.com</a></p>
+              <p><a href="mailto:info@ornek.com">info@ornek.com</a></p>
             </div>
           </div>
           <div class="contact__item">
@@ -523,7 +542,7 @@
           </div>
           <a
             class="contact__directions"
-            href="https://www.google.com/maps/dir/?api=1&destination=38.371702,27.140392"
+            href="https://www.google.com/maps/dir/?api=1&destination=Burdur"
             target="_blank"
             rel="noopener"
           >
@@ -534,7 +553,7 @@
         <div class="contact__map">
           <iframe
             title="Özen Koltuk konumu"
-            src="https://maps.google.com/maps?q=38.371702,27.140392&hl=tr&z=17&output=embed"
+            src="https://maps.google.com/maps?q=Burdur&hl=tr&z=14&output=embed"
             loading="lazy"
             allowfullscreen
             referrerpolicy="no-referrer-when-downgrade"
@@ -554,6 +573,25 @@
             alanlarınızı birlikte güzelleştirelim.
           </p>
           <ul class="footer__socials">
+            <li>
+              <a
+                href="https://instagram.com/KULLANICI_ADI"
+                target="_blank"
+                rel="noopener"
+                aria-label="Instagram"
+                ><i class="ri-instagram-line"></i
+              ></a>
+            </li>
+            <li>
+              <a
+                class="footer-wa"
+                href="https://wa.me/905XXXXXXXXX"
+                target="_blank"
+                rel="noopener"
+                aria-label="WhatsApp"
+                ><i class="ri-whatsapp-line"></i
+              ></a>
+            </li>
             <li>
               <a href="#" aria-label="Facebook"
                 ><i class="ri-facebook-fill"></i
@@ -630,10 +668,45 @@
             return;
           }
 
+          // Google işletme profilinin "yorum yaz" bağlantısı (boşsa buton gösterilmez)
+          const GOOGLE_REVIEW_URL = "";
+
           const KEY = "ozen-comments";
           const msg = document.getElementById("comment-msg");
           const textEl = document.getElementById("c-text");
           const countEl = document.getElementById("char-count");
+
+          // ---- Sadece ilk 3 yorum görünsün, kalanı butonla açılsın ----
+          const LIMIT = 3;
+          const moreBtn = document.getElementById("more-comments");
+          let expanded = false;
+
+          function applyCollapse() {
+            const items = [...list.querySelectorAll(".testimonial-item")];
+            items.forEach((el, i) =>
+              el.classList.toggle("is-extra", i >= LIMIT),
+            );
+            const extra = Math.max(0, items.length - LIMIT);
+            list.classList.toggle("expanded", expanded);
+            if (!moreBtn) return;
+            moreBtn.hidden = extra === 0;
+            moreBtn.setAttribute("aria-expanded", String(expanded));
+            moreBtn.textContent = expanded
+              ? "Daha az göster ▴"
+              : `Daha fazla yorum göster (${extra}) ▾`;
+          }
+
+          if (moreBtn) {
+            moreBtn.addEventListener("click", () => {
+              expanded = !expanded;
+              applyCollapse();
+              if (!expanded) {
+                const sec = document.getElementById("reviews");
+                if (sec)
+                  sec.scrollIntoView({ behavior: "smooth", block: "start" });
+              }
+            });
+          }
 
           let saved = [];
           try {
@@ -691,6 +764,7 @@
 
           // Kayıtlı yorumları en yeni üstte olacak şekilde listenin başına ekle
           [...saved].reverse().forEach((c) => list.prepend(buildItem(c)));
+          applyCollapse();
 
           textEl.addEventListener(
             "input",
@@ -732,11 +806,25 @@
             } catch (err) {}
 
             list.prepend(buildItem(comment));
+            applyCollapse();
             form.reset();
             countEl.textContent = "0";
             msg.className = "comment-form__msg ok";
             msg.textContent = "Yorumunuz eklendi, teşekkür ederiz!";
-            setTimeout(() => (msg.textContent = ""), 4000);
+            if (GOOGLE_REVIEW_URL) {
+              msg.append(" ");
+              const a = document.createElement("a");
+              a.href = GOOGLE_REVIEW_URL;
+              a.target = "_blank";
+              a.rel = "noopener";
+              a.className = "google-review-link";
+              a.textContent = "Google'da da paylaşın →";
+              msg.appendChild(a);
+            }
+            setTimeout(
+              () => (msg.textContent = ""),
+              GOOGLE_REVIEW_URL ? 15000 : 4000,
+            );
           });
         } catch (err) {
           console.error("Yorum bölümü hatası:", err);
