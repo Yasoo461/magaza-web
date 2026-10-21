@@ -3,7 +3,7 @@
 **Kullanılan Teknolojiler:** HTML, CSS, JavaScript (framework yok)
 **Tür:** Duyarlı (responsive) ön yüz e-ticaret projesi
 
-![Özen Koltuk Ana Sayfa Önizlemesi](./assets/screenshot.png)
+![Özen Koltuk Ana Sayfa Önizlemesi](./assets/screenshot_1.png)
 
 ---
 
