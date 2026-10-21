@@ -5,6 +5,107 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Furni.shop | Yönetim Paneli</title>
     <link rel="stylesheet" href="admin.css" />
+    <style>
+      .image-previews {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin: 0.75rem 0;
+      }
+      .thumb {
+        position: relative;
+        width: 110px;
+      }
+      .thumb img {
+        width: 110px;
+        height: 110px;
+        object-fit: cover;
+        border-radius: 10px;
+        border: 1px solid #ddd;
+        display: block;
+      }
+      .thumb-badge {
+        position: absolute;
+        top: 6px;
+        left: 6px;
+        padding: 2px 8px;
+        border-radius: 999px;
+        background: #254d4d;
+        color: #fff;
+        font-size: 0.7rem;
+      }
+      .thumb-remove {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        width: 24px;
+        height: 24px;
+        border: none;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.65);
+        color: #fff;
+        font-size: 1rem;
+        line-height: 1;
+        cursor: pointer;
+      }
+      .thumb-cover {
+        width: 100%;
+        margin-top: 4px;
+        padding: 4px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        background: #fff;
+        font-size: 0.75rem;
+        cursor: pointer;
+      }
+      .color-adder {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        align-items: center;
+      }
+      .color-adder input[type="color"] {
+        width: 44px;
+        height: 40px;
+        padding: 2px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+      .color-adder input[id="color-name"] {
+        flex: 1 1 160px;
+      }
+      .color-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin: 0.75rem 0;
+      }
+      .color-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.3rem 0.5rem 0.3rem 0.4rem;
+        border: 1px solid #ddd;
+        border-radius: 999px;
+        background: #fff;
+        font-size: 0.85rem;
+      }
+      .color-swatch {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        border: 1px solid rgba(0, 0, 0, 0.2);
+      }
+      .chip-remove {
+        border: none;
+        background: none;
+        color: #d64545;
+        font-size: 1.1rem;
+        line-height: 1;
+        cursor: pointer;
+      }
+    </style>
   </head>
   <body>
     <header class="topbar">
@@ -60,17 +161,45 @@
             placeholder="Ürünün özelliklerini yaz..."
           ></textarea>
 
-          <label for="product-image">Ürün fotoğrafı</label>
+          <label for="product-images">Ürün fotoğrafları (en fazla 5)</label>
           <input
-            id="product-image"
+            id="product-images"
             type="file"
             accept="image/png,image/jpeg,image/webp"
+            multiple
           />
-
-          <img id="image-preview" alt="Ürün ön izlemesi" hidden />
-
+          <div id="image-previews" class="image-previews"></div>
           <p class="hint">
-            En fazla 2 MB boyutunda JPG, PNG veya WebP görsel seç.
+            JPG, PNG veya WebP seç. İlk fotoğraf kapak olur, istediğini "Kapak
+            yap" ile değiştirebilirsin. Fotoğraflar otomatik küçültülür.
+          </p>
+
+          <label for="color-name">Renk seçenekleri (isteğe bağlı)</label>
+          <div class="color-adder">
+            <input
+              id="color-name"
+              maxlength="30"
+              placeholder="Örn. Antrasit"
+              autocomplete="off"
+            />
+            <input
+              id="color-hex"
+              type="color"
+              value="#254d4d"
+              aria-label="Renk seç"
+            />
+            <select
+              id="color-image"
+              aria-label="Bu renge ait fotoğraf"
+            ></select>
+            <button type="button" id="add-color" class="secondary">
+              Renk Ekle
+            </button>
+          </div>
+          <div id="color-list" class="color-list"></div>
+          <p class="hint">
+            Rengin hangi fotoğrafta göründüğünü seçersen, müşteri o rengi
+            seçince fotoğraf otomatik değişir.
           </p>
 
           <div class="form-actions">

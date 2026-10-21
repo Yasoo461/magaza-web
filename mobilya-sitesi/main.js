@@ -199,7 +199,8 @@ function filterProducts() {
     card.style.display = show ? "" : "none";
     if (show) visible++;
   });
-  noResults.hidden = visible > 0;
+  const total = document.querySelectorAll(".product__card").length;
+  noResults.hidden = visible > 0 || total === 0;
 }
 
 // Ürünü olmayan kategori butonlarını gizle
@@ -295,12 +296,17 @@ if (typeof ScrollReveal !== "undefined") {
   map.forEach((_, section) => io.observe(section));
 })();
 
-// ---------- Admin panelinden eklenen ürünler ----------
+// ---------- Admin panelinden eklenen ürünler (çoklu fotoğraf + renk) ----------
 (function () {
   try {
     const KEY = "furniProducts"; // admin.js ile aynı anahtar
     const grid = document.querySelector(".product__grid");
     if (!grid) return;
+
+    let byId = new Map();
+    let modal = null;
+    let lastFocus = null;
+    const state = { p: null, imgs: [], colors: [], img: 0, color: null };
 
     function loadAdminProducts() {
       try {
@@ -311,6 +317,16 @@ if (typeof ScrollReveal !== "undefined") {
       }
     }
 
+    const imagesOf = (p) =>
+      Array.isArray(p.images) && p.images.length
+        ? p.images
+        : p.image
+          ? [p.image]
+          : [];
+    const colorsOf = (p) =>
+      Array.isArray(p.colors) ? p.colors.filter((c) => c && c.name) : [];
+    const hexOf = (v) => (/^#[0-9a-f]{6}$/i.test(v) ? v : "#cccccc");
+
     function el(tag, cls, text) {
       const n = document.createElement(tag);
       if (cls) n.className = cls;
@@ -318,39 +334,242 @@ if (typeof ScrollReveal !== "undefined") {
       return n;
     }
 
+    /* ---------- Kartlar ---------- */
     function renderAdminProducts() {
       grid
         .querySelectorAll('.product__card[data-admin="1"]')
         .forEach((c) => c.remove());
+      byId = new Map();
 
       loadAdminProducts().forEach((p) => {
+        const imgs = imagesOf(p);
+        const colors = colorsOf(p);
+        byId.set(String(p.id), p);
+
         const card = el("div", "product__card");
         card.dataset.admin = "1";
         card.dataset.category = p.category || "";
+        card.dataset.productId = String(p.id);
 
         const img = document.createElement("img");
-        img.src = p.image;
+        img.src = imgs[0] || "";
         img.alt = p.name;
         img.loading = "lazy";
-
-        const btn = el("button", "add-to-cart-btn", "Sepete Ekle");
-        btn.type = "button";
-        btn.dataset.id = "admin-" + p.id;
-        btn.dataset.name = p.name;
-        btn.dataset.price = String(p.price);
 
         card.append(
           img,
           el("h4", "", p.name),
           el("p", "", fmtTL(Number(p.price))),
-          btn,
         );
-        if (p.description) card.title = p.description;
+
+        if (imgs.length > 1)
+          card.append(el("span", "photo-count", `${imgs.length} fotoğraf`));
+
+        if (colors.length) {
+          const dots = el("div", "card-colors");
+          colors.slice(0, 6).forEach((c) => {
+            const d = el("span", "color-dot");
+            d.style.background = hexOf(c.hex);
+            d.title = c.name;
+            dots.appendChild(d);
+          });
+          if (colors.length > 6)
+            dots.appendChild(el("span", "color-more", `+${colors.length - 6}`));
+          card.appendChild(dots);
+        }
+
+        let btn;
+        if (colors.length) {
+          btn = el("button", "view-options-btn", "Seçenekleri Gör");
+          btn.type = "button";
+        } else {
+          btn = el("button", "add-to-cart-btn", "Sepete Ekle");
+          btn.type = "button";
+          btn.dataset.id = "admin-" + p.id;
+          btn.dataset.name = p.name;
+          btn.dataset.price = String(p.price);
+        }
+        card.appendChild(btn);
         grid.appendChild(card);
       });
 
+      const emptyEl = document.getElementById("empty-products");
+      if (emptyEl) emptyEl.hidden = byId.size > 0;
+
       if (typeof updateCategoryChips === "function") updateCategoryChips();
       if (typeof filterProducts === "function") filterProducts();
+    }
+
+    // Karta (ya da "Seçenekleri Gör"e) tıklayınca detay penceresi
+    grid.addEventListener("click", (e) => {
+      const card = e.target.closest('.product__card[data-admin="1"]');
+      if (!card || e.target.closest(".add-to-cart-btn")) return;
+      const p = byId.get(card.dataset.productId);
+      if (p) openModal(p);
+    });
+
+    /* ---------- Detay penceresi ---------- */
+    function buildModal() {
+      if (modal) return;
+      modal = document.createElement("div");
+      modal.className = "pm-overlay";
+      modal.hidden = true;
+      modal.innerHTML = `
+        <div class="pm-dialog" role="dialog" aria-modal="true" aria-labelledby="pm-title">
+          <button type="button" class="pm-close" aria-label="Kapat">&times;</button>
+          <div class="pm-gallery">
+            <div class="pm-main">
+              <button type="button" class="pm-nav pm-prev" aria-label="Önceki fotoğraf">&#8249;</button>
+              <img id="pm-main-img" alt="" />
+              <button type="button" class="pm-nav pm-next" aria-label="Sonraki fotoğraf">&#8250;</button>
+            </div>
+            <div class="pm-thumbs" id="pm-thumbs"></div>
+          </div>
+          <div class="pm-info">
+            <span class="pm-cat" id="pm-cat"></span>
+            <h3 id="pm-title"></h3>
+            <p class="pm-price" id="pm-price"></p>
+            <p class="pm-desc" id="pm-desc"></p>
+            <div class="pm-colors" id="pm-colors-wrap">
+              <span class="pm-label">Renk: <b id="pm-color-name"></b></span>
+              <div class="pm-swatches" id="pm-swatches"></div>
+            </div>
+            <button type="button" class="pm-add">Sepete Ekle</button>
+          </div>
+        </div>`;
+      document.body.appendChild(modal);
+
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal || e.target.closest(".pm-close")) closeModal();
+      });
+      modal
+        .querySelector(".pm-prev")
+        .addEventListener("click", () => setImg(state.img - 1));
+      modal
+        .querySelector(".pm-next")
+        .addEventListener("click", () => setImg(state.img + 1));
+      modal.querySelector(".pm-add").addEventListener("click", addFromModal);
+
+      document.addEventListener("keydown", (e) => {
+        if (modal.hidden) return;
+        if (e.key === "Escape") closeModal();
+        if (e.key === "ArrowRight") setImg(state.img + 1);
+        if (e.key === "ArrowLeft") setImg(state.img - 1);
+      });
+    }
+
+    function setImg(i) {
+      const n = state.imgs.length;
+      if (!n) return;
+      state.img = (i + n) % n;
+      const main = modal.querySelector("#pm-main-img");
+      main.src = state.imgs[state.img];
+      main.alt = `${state.p.name} - fotoğraf ${state.img + 1}`;
+      modal.querySelectorAll(".pm-thumb").forEach((t, idx) => {
+        t.classList.toggle("active", idx === state.img);
+      });
+    }
+
+    function selectColor(i) {
+      state.color = i;
+      const c = state.colors[i];
+      modal.querySelector("#pm-color-name").textContent = c ? c.name : "";
+      modal.querySelectorAll(".pm-swatch").forEach((s, idx) => {
+        s.classList.toggle("active", idx === i);
+        s.setAttribute("aria-pressed", String(idx === i));
+      });
+      if (
+        c &&
+        Number.isInteger(c.image) &&
+        c.image >= 0 &&
+        c.image < state.imgs.length
+      ) {
+        setImg(c.image);
+      }
+    }
+
+    function openModal(p) {
+      buildModal();
+      lastFocus = document.activeElement;
+
+      state.p = p;
+      state.imgs = imagesOf(p);
+      state.colors = colorsOf(p);
+      state.img = 0;
+      state.color = null;
+
+      modal.querySelector("#pm-cat").textContent = p.category || "";
+      modal.querySelector("#pm-title").textContent = p.name;
+      modal.querySelector("#pm-price").textContent = fmtTL(Number(p.price));
+      modal.querySelector("#pm-desc").textContent = p.description || "";
+
+      const thumbs = modal.querySelector("#pm-thumbs");
+      thumbs.replaceChildren();
+      state.imgs.forEach((src, i) => {
+        const b = el("button", "pm-thumb");
+        b.type = "button";
+        b.setAttribute("aria-label", `Fotoğraf ${i + 1}`);
+        const im = document.createElement("img");
+        im.src = src;
+        im.alt = "";
+        b.appendChild(im);
+        b.addEventListener("click", () => setImg(i));
+        thumbs.appendChild(b);
+      });
+      const multi = state.imgs.length > 1;
+      thumbs.hidden = !multi;
+      modal.querySelector(".pm-prev").hidden = !multi;
+      modal.querySelector(".pm-next").hidden = !multi;
+
+      const wrap = modal.querySelector("#pm-colors-wrap");
+      const sw = modal.querySelector("#pm-swatches");
+      sw.replaceChildren();
+      wrap.hidden = state.colors.length === 0;
+      state.colors.forEach((c, i) => {
+        const s = el("button", "pm-swatch");
+        s.type = "button";
+        s.style.background = hexOf(c.hex);
+        s.title = c.name;
+        s.setAttribute("aria-label", c.name);
+        s.addEventListener("click", () => selectColor(i));
+        sw.appendChild(s);
+      });
+
+      const addBtn = modal.querySelector(".pm-add");
+      addBtn.textContent = "Sepete Ekle";
+      addBtn.disabled = false;
+
+      setImg(0);
+      if (state.colors.length) selectColor(0);
+
+      modal.hidden = false;
+      document.body.style.overflow = "hidden";
+      modal.querySelector(".pm-close").focus();
+    }
+
+    function closeModal() {
+      if (!modal) return;
+      modal.hidden = true;
+      document.body.style.overflow = "";
+      if (lastFocus && lastFocus.focus) lastFocus.focus();
+    }
+
+    function addFromModal() {
+      const p = state.p;
+      if (!p) return;
+      const color = state.color !== null ? state.colors[state.color] : null;
+      addToCart({
+        id: "admin-" + p.id + (color ? "-" + color.name : ""),
+        name: p.name + (color ? ` (${color.name})` : ""),
+        price: Number(p.price),
+      });
+      const btn = modal.querySelector(".pm-add");
+      btn.textContent = "Sepete eklendi ✓";
+      btn.disabled = true;
+      setTimeout(() => {
+        btn.textContent = "Sepete Ekle";
+        btn.disabled = false;
+      }, 900);
     }
 
     renderAdminProducts();
