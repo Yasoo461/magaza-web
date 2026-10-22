@@ -582,3 +582,18 @@ if (typeof ScrollReveal !== "undefined") {
     console.error("Admin ürünleri yüklenemedi:", err);
   }
 })();
+
+// ---------- Ayarlardan (config.js) WhatsApp ve Instagram bağlantıları ----------
+(function () {
+  const c = window.SITE_CONFIG;
+  if (!c) return;
+  document.querySelectorAll("[data-whatsapp]").forEach((a) => {
+    const withMsg = a.dataset.whatsapp === "msg";
+    a.href =
+      `https://wa.me/${c.whatsapp}` +
+      (withMsg ? `?text=${encodeURIComponent(c.greeting || "")}` : "");
+  });
+  document.querySelectorAll("[data-instagram]").forEach((a) => {
+    a.href = `https://instagram.com/${c.instagram}`;
+  });
+})();

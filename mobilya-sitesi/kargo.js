@@ -69,6 +69,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("shipping-form").addEventListener("submit", (e) => {
     e.preventDefault();
+    const checked = document.querySelector('input[name="shipping"]:checked');
+    const label = checked && checked.closest("label").querySelector("strong");
+    localStorage.setItem("shippingName", label ? label.textContent : "Kargo");
     localStorage.setItem("shippingCost", String(shippingCost));
     window.location.href = "odeme.html";
   });
