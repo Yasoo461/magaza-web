@@ -3,9 +3,98 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ödeme - Adım 3</title>
+    <title>Siparişi Tamamla - Adım 3</title>
     <link rel="stylesheet" href="odeme.style.css" />
     <style>
+      .pay-options {
+        display: grid;
+        gap: 0.8rem;
+        margin: 1rem 0;
+      }
+      .pay-option {
+        display: flex;
+        align-items: center;
+        gap: 0.9rem;
+        padding: 1rem 1.1rem;
+        border: 1px solid #d9e2e1;
+        border-radius: 10px;
+        background: #fff;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+      .pay-option:hover {
+        border-color: #254d4d;
+      }
+      .pay-option:has(input:checked) {
+        border-color: #254d4d;
+        background: #f1f6f5;
+        box-shadow: 0 0 0 3px rgba(37, 77, 77, 0.12);
+      }
+      .pay-option input {
+        accent-color: #254d4d;
+        width: 18px;
+        height: 18px;
+      }
+      .pay-option .info {
+        flex: 1;
+      }
+      .pay-option .info strong {
+        display: block;
+      }
+      .pay-option .info small {
+        color: #737373;
+      }
+
+      .pay-detail {
+        margin: 0.5rem 0 1rem;
+        padding: 1rem 1.1rem;
+        border-radius: 10px;
+        background: #f4f6f5;
+        font-size: 0.92rem;
+        line-height: 1.6;
+        color: #444;
+      }
+      .pay-detail dl {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 0.3rem 1rem;
+        margin: 0;
+      }
+      .pay-detail dt {
+        color: #737373;
+      }
+      .pay-detail dd {
+        margin: 0;
+        font-weight: 600;
+        word-break: break-word;
+      }
+      .copy-iban {
+        margin-top: 0.7rem;
+        padding: 0.45rem 1rem;
+        border: 1px solid #254d4d;
+        border-radius: 999px;
+        background: #fff;
+        font: inherit;
+        font-size: 0.85rem;
+        color: #254d4d;
+        cursor: pointer;
+      }
+      .copy-iban:hover {
+        background: #254d4d;
+        color: #fff;
+      }
+
+      .wa-note {
+        margin: 1rem 0;
+        padding: 0.9rem 1rem;
+        border-left: 4px solid #25d366;
+        border-radius: 8px;
+        background: #effbf3;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        color: #25513a;
+      }
+
       .summary-address {
         margin: 1rem 0;
         padding: 0.9rem 1rem;
@@ -20,14 +109,54 @@
         margin-bottom: 0.2rem;
         color: #254d4d;
       }
-      #pay-error {
-        color: #d64545;
-        min-height: 1.3em;
-        margin: 0.5rem 0;
+
+      .submit-order-btn.wa {
+        background: #25d366;
+        border-color: #25d366;
+        color: #fff;
       }
-      .submit-order-btn:disabled {
-        opacity: 0.6;
-        cursor: wait;
+      .submit-order-btn.wa:hover {
+        background: #1ebe5b;
+      }
+
+      .order-done {
+        text-align: center;
+        padding: 2rem 1rem;
+      }
+      .order-done .check {
+        display: grid;
+        place-items: center;
+        width: 72px;
+        height: 72px;
+        margin: 0 auto 1rem;
+        border-radius: 50%;
+        background: #e6efee;
+        font-size: 2rem;
+        color: #254d4d;
+      }
+      .order-done h2 {
+        margin-bottom: 0.6rem;
+      }
+      .order-done p {
+        max-width: 460px;
+        margin: 0 auto 0.6rem;
+        line-height: 1.6;
+        color: #555;
+      }
+      .order-done .order-no {
+        font-weight: 700;
+        color: #254d4d;
+      }
+      .order-done .done-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.8rem;
+        margin-top: 1.4rem;
+      }
+      .order-done a {
+        text-decoration: none;
+        display: inline-block;
       }
     </style>
   </head>
@@ -54,72 +183,106 @@
           <div class="step-line"></div>
           <div class="step active">
             <span class="step-number">3</span>
-            <span class="step-title">Ödeme Seçenekleri</span>
+            <span class="step-title">Ödeme ve Sipariş</span>
           </div>
         </div>
 
-        <h2>3. Kart ile Ödeme Bilgileri</h2>
-        <form id="payment-form" novalidate autocomplete="off">
-          <div class="form-group">
-            <label for="card-name">Kart Üzerindeki İsim *</label>
-            <input
-              type="text"
-              id="card-name"
-              required
-              placeholder="AHMET YILMAZ"
-            />
-          </div>
-          <div class="form-group">
-            <label for="card-number">Kart Numarası *</label>
-            <input
-              type="text"
-              id="card-number"
-              inputmode="numeric"
-              maxlength="19"
-              required
-              placeholder="0000 0000 0000 0000"
-            />
-          </div>
-          <div class="form-group-row">
-            <div class="form-group">
-              <label for="card-expiry">Son Kullanma Tarihi *</label>
-              <input
-                type="text"
-                id="card-expiry"
-                inputmode="numeric"
-                placeholder="AA/YY"
-                maxlength="5"
-                required
-              />
+        <!-- Sipariş formu -->
+        <div id="order-form-wrap">
+          <h2>3. Ödeme Yöntemi</h2>
+          <form id="order-form" novalidate>
+            <div class="pay-options">
+              <label class="pay-option">
+                <input type="radio" name="payment" value="havale" checked />
+                <span class="info">
+                  <strong>Havale / EFT</strong>
+                  <small
+                    >Sipariş sonrası banka hesabımıza ödeme yaparsınız</small
+                  >
+                </span>
+              </label>
+              <label class="pay-option">
+                <input type="radio" name="payment" value="kapida" />
+                <span class="info">
+                  <strong>Kapıda Ödeme</strong>
+                  <small>Ürünü teslim alırken ödersiniz</small>
+                </span>
+              </label>
             </div>
-            <div class="form-group">
-              <label for="card-cvc">CVC / CVV *</label>
-              <input
-                type="password"
-                id="card-cvc"
-                inputmode="numeric"
-                maxlength="3"
-                required
-                placeholder="123"
-              />
+
+            <div class="pay-detail" id="pay-detail-havale">
+              <dl>
+                <dt>Banka</dt>
+                <dd id="bank-name"></dd>
+                <dt>Hesap sahibi</dt>
+                <dd id="bank-account"></dd>
+                <dt>IBAN</dt>
+                <dd id="bank-iban"></dd>
+              </dl>
+              <button type="button" class="copy-iban" id="copy-iban">
+                IBAN'ı kopyala
+              </button>
             </div>
-          </div>
+            <div class="pay-detail" id="pay-detail-kapida" hidden>
+              Ürününüzü teslim alırken ödeme yapabilirsiniz. Kargo firması ya da
+              teslimat sırasında nakit ya da kart ile ödeme seçeneklerini
+              sizinle netleştireceğiz.
+            </div>
 
-          <p id="pay-error" role="alert"></p>
+            <p class="wa-note">
+              Siparişiniz <strong>WhatsApp</strong> üzerinden bize iletilecek.
+              Açılan mesajı <strong>göndermeyi</strong> unutmayın. Siparişiniz
+              mesajı gönderdiğinizde bize ulaşır.
+            </p>
 
-          <div class="step-buttons">
-            <button
-              type="button"
-              class="prev-step-btn"
-              onclick="window.location.href = 'kargo.html'"
+            <p
+              id="pay-error"
+              role="alert"
+              style="color: #d64545; min-height: 1.3em; margin: 0.4rem 0"
+            ></p>
+
+            <div class="step-buttons">
+              <button
+                type="button"
+                class="prev-step-btn"
+                onclick="window.location.href = 'kargo.html'"
+              >
+                Geri
+              </button>
+              <button type="submit" class="submit-order-btn wa" id="send-btn">
+                Siparişi WhatsApp'tan Gönder
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Sipariş gönderildi ekranı -->
+        <div class="order-done" id="order-done" hidden>
+          <div class="check">✓</div>
+          <h2>Siparişiniz hazırlandı</h2>
+          <p>
+            Sipariş numaranız: <span class="order-no" id="done-order-no"></span>
+          </p>
+          <p>
+            WhatsApp açıldı. Mesajı <strong>göndermeyi unutmayın</strong>.
+            Mesajı gönderdiğinizde siparişiniz bize ulaşır ve sizinle ilgili
+            adımları oradan netleştiririz.
+          </p>
+          <div class="done-actions">
+            <a
+              class="submit-order-btn wa"
+              id="reopen-wa"
+              href="#"
+              target="_blank"
+              rel="noopener"
             >
-              Geri
-            </button>
-            <button type="submit" class="submit-order-btn" id="pay-btn">
-              Siparişi Onayla ve Öde
-            </button>
+              WhatsApp'ı Tekrar Aç
+            </a>
+            <a class="prev-step-btn" href="index.html?siparis=tamam"
+              >Alışverişe Dön</a
+            >
           </div>
-        </form>
+        </div>
       </div>
 
       <!-- Sipariş Özeti -->
@@ -150,7 +313,17 @@
       </div>
     </div>
 
+    <script src="config.js"></script>
     <script>
+      const CFG = window.SITE_CONFIG || {
+        whatsapp: "905XXXXXXXXX",
+        bank: {
+          name: "Banka adı",
+          account: "Hesap sahibi",
+          iban: "TR00 0000 0000 0000 0000 0000 00",
+        },
+      };
+
       const fmt = (n) =>
         n.toLocaleString("tr-TR", {
           minimumFractionDigits: 2,
@@ -166,12 +339,18 @@
         }
       };
 
+      const SHIPPING_NAMES = {
+        0: "Mağazadan Teslim",
+        30: "Standart Kargo",
+        60: "Hızlı Kargo",
+      };
+
       document.addEventListener("DOMContentLoaded", () => {
         const cart = read("userCart", []);
         const address = read("checkoutAddress", null);
         const rawShipping = localStorage.getItem("shippingCost");
 
-        // Güvenlik: akışın önceki adımları atlanmışsa geri gönder
+        // Önceki adımlar atlanmışsa geri gönder
         if (!Array.isArray(cart) || cart.length === 0) {
           alert("Sepetiniz boş! Ana sayfaya yönlendiriliyorsunuz.");
           window.location.href = "index.html";
@@ -187,31 +366,60 @@
         }
 
         const shippingCost = Number(rawShipping) || 0;
-        loadSummary(cart, address, shippingCost);
-        setupCardInputs();
+        const shippingName =
+          localStorage.getItem("shippingName") ||
+          SHIPPING_NAMES[shippingCost] ||
+          "Kargo";
 
-        const form = document.getElementById("payment-form");
+        const totals = loadSummary(cart, address, shippingCost);
+        setupPaymentUI();
+
         const errorEl = document.getElementById("pay-error");
-        const payBtn = document.getElementById("pay-btn");
+        const form = document.getElementById("order-form");
 
         form.addEventListener("submit", (e) => {
           e.preventDefault();
-          const error = validateCard();
-          if (error) {
-            errorEl.textContent = error;
+          const method = document.querySelector(
+            'input[name="payment"]:checked',
+          );
+          if (!method) {
+            errorEl.textContent = "Lütfen bir ödeme yöntemi seçin.";
             return;
           }
           errorEl.textContent = "";
-          payBtn.disabled = true; // çift tıklamayı engelle
 
-          alert(`Tebrikler ${address.fullname}! Siparişiniz başarıyla alındı.`);
+          const orderNo =
+            "ON-" + Date.now().toString(36).toUpperCase().slice(-6);
+          const message = buildMessage({
+            orderNo,
+            cart,
+            address,
+            shippingName,
+            shippingCost,
+            totals,
+            payment: method.value,
+          });
+          const url = `https://wa.me/${CFG.whatsapp}?text=${encodeURIComponent(message)}`;
+
+          // WhatsApp'ı aç (açılış engellenirse aynı sekmede aç)
+          const win = window.open(url, "_blank", "noopener");
+          if (!win) window.location.href = url;
 
           // Sepeti ve sipariş verilerini temizle
-          localStorage.removeItem("userCart");
-          localStorage.removeItem("checkoutAddress");
-          localStorage.removeItem("shippingCost");
-          localStorage.removeItem("ozen-cart"); // eski sürümden kalan kayıt
-          window.location.href = "index.html?siparis=tamam";
+          [
+            "userCart",
+            "checkoutAddress",
+            "shippingCost",
+            "shippingName",
+            "ozen-cart",
+          ].forEach((k) => localStorage.removeItem(k));
+
+          // Onay ekranı
+          document.getElementById("order-form-wrap").hidden = true;
+          document.getElementById("done-order-no").textContent = orderNo;
+          document.getElementById("reopen-wa").href = url;
+          document.getElementById("order-done").hidden = false;
+          window.scrollTo({ top: 0, behavior: "smooth" });
         });
       });
 
@@ -234,69 +442,91 @@
           container.appendChild(row);
         });
 
+        const grand = subtotal + shippingCost;
         document.getElementById("subtotal-price").textContent = fmt(subtotal);
         document.getElementById("shipping-price").textContent =
           shippingCost === 0 ? "Ücretsiz" : fmt(shippingCost);
-        document.getElementById("final-total-price").textContent = fmt(
-          subtotal + shippingCost,
-        );
+        document.getElementById("final-total-price").textContent = fmt(grand);
 
         document.getElementById("summary-address-text").textContent =
           `${address.fullname} — ${address.address || ""}`;
         document.getElementById("summary-address").hidden = false;
+
+        return { subtotal, grand };
       }
 
-      function setupCardInputs() {
-        const number = document.getElementById("card-number");
-        const expiry = document.getElementById("card-expiry");
-        const cvc = document.getElementById("card-cvc");
+      function setupPaymentUI() {
+        const bank = CFG.bank || {};
+        document.getElementById("bank-name").textContent = bank.name || "";
+        document.getElementById("bank-account").textContent =
+          bank.account || "";
+        document.getElementById("bank-iban").textContent = bank.iban || "";
 
-        // Kart no: sadece rakam, 4'erli boşluk
-        number.addEventListener("input", () => {
-          const digits = number.value.replace(/\D/g, "").slice(0, 16);
-          number.value = digits.replace(/(.{4})/g, "$1 ").trim();
-        });
+        const havale = document.getElementById("pay-detail-havale");
+        const kapida = document.getElementById("pay-detail-kapida");
+        document.querySelectorAll('input[name="payment"]').forEach((r) =>
+          r.addEventListener("change", () => {
+            const isHavale =
+              document.querySelector('input[name="payment"]:checked').value ===
+              "havale";
+            havale.hidden = !isHavale;
+            kapida.hidden = isHavale;
+          }),
+        );
 
-        // SKT: AA/YY
-        expiry.addEventListener("input", () => {
-          let d = expiry.value.replace(/\D/g, "").slice(0, 4);
-          if (d.length >= 3) d = d.slice(0, 2) + "/" + d.slice(2);
-          expiry.value = d;
-        });
-
-        // CVC: sadece rakam
-        cvc.addEventListener("input", () => {
-          cvc.value = cvc.value.replace(/\D/g, "").slice(0, 3);
+        const copyBtn = document.getElementById("copy-iban");
+        copyBtn.addEventListener("click", async () => {
+          try {
+            await navigator.clipboard.writeText(
+              (bank.iban || "").replace(/\s/g, ""),
+            );
+            copyBtn.textContent = "Kopyalandı ✓";
+          } catch (e) {
+            copyBtn.textContent = "Kopyalanamadı";
+          }
+          setTimeout(() => (copyBtn.textContent = "IBAN'ı kopyala"), 1500);
         });
       }
 
-      function validateCard() {
-        const name = document.getElementById("card-name").value.trim();
-        const number = document
-          .getElementById("card-number")
-          .value.replace(/\s/g, "");
-        const expiry = document.getElementById("card-expiry").value;
-        const cvc = document.getElementById("card-cvc").value;
-
-        if (name.length < 3) return "Lütfen kart üzerindeki ismi girin.";
-        if (!/^\d{16}$/.test(number))
-          return "Kart numarası 16 haneli olmalıdır.";
-
-        const m = expiry.match(/^(\d{2})\/(\d{2})$/);
-        if (!m) return "Son kullanma tarihini AA/YY biçiminde girin.";
-        const month = Number(m[1]);
-        const year = 2000 + Number(m[2]);
-        if (month < 1 || month > 12) return "Geçersiz ay girdiniz.";
-        const now = new Date();
-        if (
-          year < now.getFullYear() ||
-          (year === now.getFullYear() && month < now.getMonth() + 1)
-        ) {
-          return "Kartınızın son kullanma tarihi geçmiş.";
-        }
-
-        if (!/^\d{3}$/.test(cvc)) return "CVC 3 haneli olmalıdır.";
-        return "";
+      function buildMessage({
+        orderNo,
+        cart,
+        address,
+        shippingName,
+        shippingCost,
+        totals,
+        payment,
+      }) {
+        const lines = [];
+        lines.push(`Merhaba, sipariş vermek istiyorum.`);
+        lines.push(`*Sipariş No:* ${orderNo}`);
+        lines.push("");
+        lines.push("*Ürünler*");
+        cart.forEach((item, i) => {
+          const total = Number(item.price) * Number(item.quantity);
+          lines.push(
+            `${i + 1}. ${item.name} x${item.quantity} - ${fmt(total)}`,
+          );
+        });
+        lines.push("");
+        lines.push(`Ara toplam: ${fmt(totals.subtotal)}`);
+        lines.push(
+          `Kargo (${shippingName}): ${shippingCost === 0 ? "Ücretsiz" : fmt(shippingCost)}`,
+        );
+        lines.push(`*Toplam: ${fmt(totals.grand)}*`);
+        lines.push("");
+        lines.push("*Teslimat Bilgileri*");
+        lines.push(`Ad Soyad: ${address.fullname}`);
+        lines.push(`Telefon: ${address.phone || "-"}`);
+        lines.push(`E-posta: ${address.email || "-"}`);
+        lines.push(`Adres: ${address.address || "-"}`);
+        lines.push("");
+        lines.push(
+          payment === "havale"
+            ? "*Ödeme yöntemi:* Havale / EFT (dekontu bu sohbetten gönderebilirim)"
+            : "*Ödeme yöntemi:* Kapıda ödeme",
+        );
+        return lines.join("\n");
       }
     </script>
   </body>
